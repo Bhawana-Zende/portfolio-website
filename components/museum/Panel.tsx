@@ -32,6 +32,7 @@ export function Panel({
       </svg>
 
       <div
+        data-panel=""
         style={{
           background: "var(--color-ink)",
           color: "var(--color-paper)",

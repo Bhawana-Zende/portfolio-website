@@ -27,12 +27,7 @@ export function Guestbook() {
           The lights are going down. Thank you for walking through.
         </p>
 
-        <p className="t-micro mt-[var(--spacing-40)]" style={{ color: "var(--room-muted)" }}>
-          Backdrop: {backdrop.credit.artist}, <i>{backdrop.credit.title}</i> ·{" "}
-          {backdrop.credit.source} · {backdrop.credit.licence}
-        </p>
-
-        <ul className="m-0 mt-10 flex list-none flex-wrap gap-x-8 gap-y-3 p-0">
+        <ul className="m-0 mt-[var(--spacing-52)] flex list-none flex-wrap gap-x-8 gap-y-3 p-0">
           {[
             ["Email", "mailto:hello@bhawanazende.com"],
             ["LinkedIn", "#"],
@@ -46,6 +41,14 @@ export function Guestbook() {
             </li>
           ))}
         </ul>
+
+        <p
+          className="t-micro mt-[var(--spacing-60)] max-w-[46ch]"
+          style={{ color: "var(--room-muted)", lineHeight: 1.8 }}
+        >
+          Backdrop: {backdrop.credit.artist}, <i>{backdrop.credit.title}</i>.{" "}
+          {backdrop.credit.source}, {backdrop.credit.licence}.
+        </p>
       </div>
 
       <form

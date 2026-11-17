@@ -288,6 +288,15 @@ body {
 }
 
 /* ── the one filled control: a compact capsule ───────────────── */
+[data-panel] {
+  --room-bg: var(--color-ink);
+  --room-fg: var(--color-paper);
+  --room-muted: var(--color-ash);
+  --room-rule: var(--color-graphite);
+  --room-card: var(--color-ink);
+  --room-placeholder: var(--color-graphite);
+}
+
 .c-pill {
   display: inline-flex;
   align-items: center;
