@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────────
+   THE MUSEUM — design tokens
+   Two lighting modes. Nothing here is "dark mode": the room is
+   either lit by daylight or by spotlights after hours.
+   ─────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="daylight"] {
+  --wall: #f4f1ea;          /* warm plaster */
+  --wall-recess: #ebe6db;   /* a wall set back from the light */
+  --ink: #1c1a17;           /* charcoal, never pure black */
+  --ink-muted: #5a544a;     /* placard metadata */
+  --ink-faint: #716a59;     /* AA on plaster: 4.8:1 */
+  --accent: #5f6b4f;        /* moss — "you are here" only */
+  --accent-soft: #5f6b4f1f;
+  --hairline: #1c1a1733;
+
+  /* the single light source */
+  --light-core: #fffdf6;
+  --light-falloff: #f4f1ea00;
+  --light-strength: 0.55;
+  --light-size: 68vmax;
+
+  --grain-opacity: 0.032;
+  color-scheme: light;
+}
+
+[data-theme="evening"] {
+  --wall: #141311;          /* the room after closing */
+  --wall-recess: #0e0d0c;
+  --ink: #ede7da;
+  --ink-muted: #a49c8c;
+  --ink-faint: #8a8273;     /* AA on night: 4.9:1 */
+  --accent: #9caa86;
+  --accent-soft: #9caa8626;
+  --hairline: #ede7da2e;
+
+  --light-core: #fff4d6;
+  --light-falloff: #14131100;
+  --light-strength: 0.16;
+  --light-size: 52vmax;
+
+  --grain-opacity: 0.05;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-wall: var(--wall);
+  --color-wall-recess: var(--wall-recess);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-accent: var(--accent);
+  --color-hairline: var(--hairline);
+
+  --font-display: var(--font-newsreader);
+  --font-sans: var(--font-inter);
+
+  /* fluid scale — placard to inscription */
+  --text-micro: clamp(0.625rem, 0.6rem + 0.12vw, 0.6875rem);
+  --text-label: clamp(0.6875rem, 0.66rem + 0.15vw, 0.75rem);
+  --text-body: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+  --text-lede: clamp(1.0625rem, 1rem + 0.5vw, 1.375rem);
+  --text-title: clamp(1.75rem, 1.4rem + 1.8vw, 3rem);
+  --text-room: clamp(2.5rem, 1.8rem + 4vw, 5rem);
+  --text-inscription: clamp(2.75rem, 1.2rem + 8.5vw, 9.5rem);
+
+  /* 8px rhythm, generous */
+  --spacing-room: clamp(5rem, 4rem + 8vw, 11rem);
+}
+
+/* ── the dimming of the lights ───────────────────────────────── */
+/* Scoped to the surfaces that actually carry the room's colour,
+   so switching modes costs a handful of transitions, not a page. */
+.room-surface {
+  transition:
+    background-color 1200ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 1200ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 1200ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  background-color: var(--wall);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--wall);
+  color: var(--ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-body);
+  line-height: 1.65;
+  font-feature-settings: "kern" 1, "liga" 1, "cv11" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ── museum-label typography ─────────────────────────────────── */
+.u-inscription {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-weight: 300;
+  font-size: var(--text-inscription);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+}
+
+.u-room-title {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-weight: 350;
+  font-size: var(--text-room);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.u-exhibit-title {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-weight: 400;
+  font-size: var(--text-title);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.u-lede {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-weight: 300;
+  font-size: var(--text-lede);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* tracked-out uppercase, the way a wall label is set */
+.u-label {
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.u-micro {
+  font-size: var(--text-micro);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.u-year {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.u-hairline {
+  border: 0;
+  border-top: 1px solid var(--hairline);
+}
+
+/* ── focus: visible, and in the museum's own language ────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/* ── the masked reveal, as light passing over cut letters ────── */
+.reveal-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.reveal-mask > span {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ── when the visitor would rather the room stayed still ─────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .room-surface {
+    transition-duration: 160ms !important;
+  }
+}
+
+/* ── plaster grain: multiplies into daylight, lifts in evening ── */
+[data-theme="daylight"] .grain {
+  mix-blend-mode: multiply;
+}
+
+[data-theme="evening"] .grain {
+  mix-blend-mode: overlay;
+}
