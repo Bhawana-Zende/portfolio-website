@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { backdrop } from "@/content/backdrop";
 
 /**
  * The way out. The newsletter goes through one adapter so a provider can
@@ -24,6 +25,11 @@ export function Guestbook() {
           className="t-heading-lg max-w-[18ch]"
         >
           The lights are going down. Thank you for walking through.
+        </p>
+
+        <p className="t-micro mt-[var(--spacing-40)]" style={{ color: "var(--room-muted)" }}>
+          Backdrop: {backdrop.credit.artist}, <i>{backdrop.credit.title}</i> ·{" "}
+          {backdrop.credit.source} · {backdrop.credit.licence}
         </p>
 
         <ul className="m-0 mt-10 flex list-none flex-wrap gap-x-8 gap-y-3 p-0">

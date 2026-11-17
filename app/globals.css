@@ -121,7 +121,28 @@
   --room-placeholder: var(--color-graphite);
 }
 
+/* An open room shows the painting: no surface of its own, type in
+   Paper and Ash so it reads over the paint. */
+[data-tone="open"] {
+  --room-bg: transparent;
+  --room-fg: var(--color-paper);
+  --room-card: var(--color-ink);
+  --room-rule: var(--color-graphite);
+  --room-muted: var(--color-ash);
+  --room-label: var(--color-paper);
+  --room-placeholder: var(--color-graphite);
+  background-color: transparent;
+}
+
+:root {
+  --scrim: 0.26;
+  /* the wordmark's own line box (0.84em of 15.6vw), shared with the
+     hero canvas so the putty stops exactly where the name begins */
+  --wordmark-h: clamp(2.52rem, 13.1vw, 314px);
+}
+
 [data-theme="evening"] {
+  --scrim: 0.58;
   color-scheme: dark;
 }
 
@@ -135,7 +156,7 @@
 }
 
 html {
-  background-color: var(--color-putty);
+  background-color: var(--color-ink);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -147,6 +168,7 @@ html[data-theme="evening"] {
 body {
   margin: 0;
   background-color: transparent;
+  position: relative;
   font-family: var(--font-helvetica-now);
   font-size: var(--text-body-sm);
   line-height: var(--leading-body-sm);
@@ -181,13 +203,10 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  height: clamp(2.2rem, 11.3vw, 270px);
+  height: var(--wordmark-h);
   align-items: flex-end;
 }
 
-.t-display-frame .t-display {
-  transform: translateY(0.165em);
-}
 
 .t-section {
   font-family: var(--font-davinci);

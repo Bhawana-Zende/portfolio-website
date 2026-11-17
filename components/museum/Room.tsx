@@ -24,7 +24,7 @@ export function Room({
 }: {
   id: RoomId;
   /** Rooms alternate light and dark with hard cuts — never a gradient. */
-  tone: "light" | "dark";
+  tone: "light" | "dark" | "open";
   children: React.ReactNode;
   wide?: boolean;
   /** Hairline geometry over a dark room. */
@@ -37,6 +37,8 @@ export function Room({
   useEffect(() => {
     const node = ref.current;
     if (!node || reduced) return;
+
+    let heading: gsap.core.Tween | null = null;
 
     const context = gsap.context(() => {
       // the doorway header drifts against the wall as you walk through
@@ -51,7 +53,7 @@ export function Room({
         },
       });
 
-      gsap.from("[data-room-heading] > *", {
+      heading = gsap.from("[data-room-heading] > *", {
         yPercent: 60,
         autoAlpha: 0,
         duration: 1,
@@ -64,6 +66,7 @@ export function Room({
 
     // a heading that never got its trigger must still be readable
     const failsafe = window.setTimeout(() => {
+      heading?.progress(1).kill();
       gsap.set(node.querySelectorAll("[data-room-heading] > *"), {
         autoAlpha: 1,
         yPercent: 0,

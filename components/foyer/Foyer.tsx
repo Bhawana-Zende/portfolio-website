@@ -61,9 +61,10 @@ export function Foyer({
     }
 
     let failsafe = 0;
+    let timeline: gsap.core.Timeline | null = null;
 
     const context = gsap.context(() => {
-      const timeline = gsap.timeline({
+      timeline = gsap.timeline({
         defaults: { ease: "power3.out" },
         onComplete: () => window.clearTimeout(failsafe),
       });
@@ -81,7 +82,12 @@ export function Foyer({
           "-=0.5",
         );
 
-      failsafe = window.setTimeout(settle, FAILSAFE_MS);
+      // finish the timeline rather than set values underneath it: a
+      // still-running tween would overwrite them on its next tick
+      failsafe = window.setTimeout(() => {
+        timeline?.progress(1).kill();
+        settle();
+      }, FAILSAFE_MS);
     }, node);
 
     return () => {
@@ -118,13 +124,31 @@ export function Foyer({
         ref={root}
         id="foyer"
         data-room="foyer"
-        data-tone="light"
+        data-tone="open"
         aria-label="Foyer"
         className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-[96px] pb-0"
       >
+        {/* The hero is a putty canvas, but it stops short of the floor so
+            the painting is already there behind the wordmark — the same
+            landscape the rest of the building is built over. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0"
+          style={{
+            height: "calc(100% - var(--wordmark-h))",
+            background: "var(--color-putty)",
+          }}
+        />
         {/* the small cluster: who, how much, and the way in */}
-        <div className="flex flex-1 flex-col items-center justify-center px-5 text-center">
-          <p data-foyer-fade="" className="t-micro" style={{ color: "var(--room-muted)" }}>
+        <div
+          className="relative flex flex-1 flex-col items-center justify-center px-5 text-center"
+          style={{ color: "var(--color-ink)" }}
+        >
+          <p
+            data-foyer-fade=""
+            className="t-micro"
+            style={{ color: "var(--color-graphite)" }}
+          >
             The Museum
           </p>
 
@@ -151,13 +175,17 @@ export function Foyer({
             type="button"
             onClick={stepInside}
             className="c-pill mt-[28px]"
+            style={{ background: "var(--color-ink)", color: "var(--color-paper)" }}
           >
             Enter the museum
           </button>
         </div>
 
         {/* the wordmark, cut off by both walls on purpose */}
-        <div className="t-display-frame relative">
+        <div
+          className="t-display-frame relative"
+          style={{ color: "var(--color-paper)" }}
+        >
           <Inscription text={name} />
         </div>
       </section>

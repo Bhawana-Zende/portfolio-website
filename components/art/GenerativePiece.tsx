@@ -15,9 +15,9 @@ const SCHOOLS: readonly School[] = ["horizon", "arc", "rule", "slat", "stone"];
 // No saturated colour anywhere: the system is warm grays and black.
 // A piece keeps its own ground so it reads as a print on the wall
 // rather than a surface that inverts with the room.
-const INK = "var(--color-ink)";
-const ACCENT = "var(--color-graphite)";
-const GROUND = "var(--color-bone)";
+const INK = "var(--room-fg, var(--color-ink))";
+const ACCENT = "var(--room-muted, var(--color-graphite))";
+const GROUND = "var(--room-card, var(--color-bone))";
 
 function horizon(r: Rand, w: number, h: number) {
   const bands = Math.floor(between(r, 4, 8));

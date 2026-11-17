@@ -8,6 +8,7 @@ import { LongWall } from "./LongWall";
 import { Shelf } from "./Shelf";
 import { Milestones } from "./Milestones";
 import { Guestbook } from "./Guestbook";
+import { Panel } from "./Panel";
 import { FloorPlan } from "./FloorPlan";
 import { Frame } from "@/components/exhibit/Frame";
 import { ExhibitOverlay } from "@/components/exhibit/ExhibitOverlay";
@@ -125,8 +126,9 @@ export function Museum({
         ]}
       />
 
-      <Room id="gallery-i" tone="dark" wireframe="chevron">
-        <div className="grid gap-[clamp(3rem,6vw,5rem)] sm:grid-cols-2 lg:grid-cols-3">
+      <Room id="gallery-i" tone="open">
+        <Panel scrollCue className="mx-auto max-w-[72rem]">
+        <div className="grid gap-[var(--spacing-52)] sm:grid-cols-2 lg:grid-cols-3">
           {ventures.map((exhibit, index) => (
             <Frame
               key={exhibit.slug}
@@ -137,9 +139,10 @@ export function Museum({
             />
           ))}
         </div>
+        </Panel>
       </Room>
 
-      <Room id="gallery-ii" tone="light">
+      <Room id="gallery-ii" tone="dark" wireframe="chevron">
         <div className="grid gap-[clamp(3rem,6vw,5rem)] sm:grid-cols-2">
           {writing.map((exhibit, index) => (
             <Frame
@@ -153,7 +156,7 @@ export function Museum({
         </div>
       </Room>
 
-      <Room id="gallery-iii" tone="dark" wide wireframe="corners">
+      <Room id="gallery-iii" tone="open" wide wireframe="corners">
         <LongWall>
           {art.map((exhibit, index) => (
             <div
@@ -172,7 +175,7 @@ export function Museum({
         </LongWall>
       </Room>
 
-      <Room id="gallery-iv" tone="light">
+      <Room id="gallery-iv" tone="dark" wireframe="corners">
         <Shelf books={books} />
       </Room>
 
@@ -183,8 +186,10 @@ export function Museum({
         </a>
       </Room>
 
-      <Room id="exit" tone="light">
-        <Guestbook />
+      <Room id="exit" tone="open">
+        <Panel className="mx-auto max-w-[64rem]">
+          <Guestbook />
+        </Panel>
       </Room>
 
       <ProgressLine />

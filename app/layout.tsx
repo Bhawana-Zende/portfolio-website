@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { LightingToggle } from "@/components/atmosphere/LightingToggle";
+import { PaintedBackdrop } from "@/components/atmosphere/PaintedBackdrop";
 import { lightingBootScript } from "@/lib/theme";
 import { site } from "@/content/site";
 
@@ -66,6 +67,8 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: lightingBootScript }} />
       </head>
       <body>
+        <PaintedBackdrop />
+
         {/* the header is a mark and a single link — no navigation chrome */}
         <header
           data-tone="light"
@@ -105,7 +108,7 @@ export default function RootLayout({
           Skip the entrance
         </a>
 
-        <main>{children}</main>
+        <main className="relative z-10">{children}</main>
       </body>
     </html>
   );
