@@ -59,8 +59,8 @@ export function ExhibitOverlay({
         onClick={onClose}
         className="absolute inset-0 h-full w-full"
         style={{
-          background: "color-mix(in srgb, var(--wall) 82%, transparent)",
-          backdropFilter: "blur(14px)",
+          background: "var(--color-ink)",
+          opacity: 0.9,
           animation: reduced ? "none" : "dim-in 500ms ease both",
         }}
       />
@@ -68,24 +68,19 @@ export function ExhibitOverlay({
       <div
         ref={panel}
         tabIndex={-1}
+        data-tone="light"
         className="relative h-full w-full overflow-y-auto outline-none"
         style={{
-          background: "var(--wall)",
           animation: reduced
             ? "none"
             : "step-closer 620ms cubic-bezier(0.22,1,0.36,1) both",
         }}
       >
-        <div className="sticky top-0 z-10 flex justify-end px-6 py-5 sm:px-10">
+        <div className="sticky top-0 z-10 flex justify-end px-5 py-5 sm:px-7">
           <button
             type="button"
             onClick={onClose}
-            className="u-label flex items-center gap-3 px-4 py-2"
-            style={{
-              color: "var(--ink-muted)",
-              background: "var(--wall)",
-              border: "1px solid var(--hairline)",
-            }}
+            className="c-pill"
           >
             Step back
           </button>

@@ -18,11 +18,10 @@ export function Guestbook() {
   const [state, setState] = useState<"idle" | "done">("idle");
 
   return (
-    <div className="grid gap-[clamp(3rem,6vw,5rem)] md:grid-cols-2">
+    <div className="grid gap-[var(--spacing-60)] md:grid-cols-2">
       <div>
         <p
-          className="u-lede m-0 max-w-[26rem]"
-          style={{ color: "var(--ink-muted)" }}
+          className="t-heading-lg max-w-[18ch]"
         >
           The lights are going down. Thank you for walking through.
         </p>
@@ -35,7 +34,7 @@ export function Guestbook() {
             ["GitHub", "#"],
           ].map(([label, href]) => (
             <li key={label} className="m-0">
-              <a className="u-label" style={{ color: "var(--accent)" }} href={href}>
+              <a className="c-link t-label" href={href}>
                 {label}
               </a>
             </li>
@@ -50,7 +49,7 @@ export function Guestbook() {
           setState("done");
         }}
       >
-        <label className="u-micro block" htmlFor="guestbook-email" style={{ color: "var(--ink-faint)" }}>
+        <label className="t-micro block" htmlFor="guestbook-email" style={{ color: "var(--room-muted)" }}>
           Leave your address
         </label>
         <input
@@ -62,22 +61,21 @@ export function Guestbook() {
           placeholder="you@example.com"
           className="mt-4 w-full bg-transparent py-3 outline-none"
           style={{
-            borderBottom: "1px solid var(--hairline)",
-            color: "var(--ink)",
-            fontSize: "var(--text-body)",
+            borderBottom: "1px solid var(--room-rule)",
+            color: "var(--room-fg)",
+            fontSize: "16px",
           }}
         />
         <button
           type="submit"
-          className="u-label mt-6 px-5 py-3"
-          style={{ color: "var(--ink-muted)", border: "1px solid var(--hairline)" }}
+          className="c-pill mt-[24px]"
         >
           Sign the guestbook
         </button>
 
         <p
-          className="u-micro m-0 mt-5"
-          style={{ color: "var(--ink-faint)" }}
+          className="t-micro mt-[20px]"
+          style={{ color: "var(--room-muted)" }}
           role="status"
         >
           {state === "done"

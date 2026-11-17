@@ -13,7 +13,7 @@ function Spine({ book }: { book: Book }) {
   const tilt = between(r, -0.6, 0.6);
   // unset spines take a deterministic tint, so a shelf reads as many books
   const tint = book.spineColor
-    ?? `color-mix(in srgb, var(--wall-recess) ${Math.round(between(r, 72, 97))}%, var(--${r() > 0.72 ? "accent" : "ink"}))`;
+    ?? `color-mix(in srgb, var(--color-bone) ${Math.round(between(r, 62, 95))}%, var(--color-${r() > 0.6 ? "graphite" : "ash"}))`;
   const hasNotes = Boolean(book.notes || book.passages?.length);
 
   return (
@@ -30,19 +30,19 @@ function Spine({ book }: { book: Book }) {
           width: `${width}rem`,
           height: `${height}%`,
           background: tint,
-          border: "1px solid var(--hairline)",
+          border: "1px solid var(--room-rule)",
           borderBottom: "none",
           transform: `translateY(${out ? -14 : 0}px) rotate(${out ? 0 : tilt}deg)`,
           transition: "transform 650ms cubic-bezier(0.22,1,0.36,1)",
         }}
       >
         <span
-          className="u-micro absolute whitespace-nowrap"
+          className="t-micro absolute whitespace-nowrap"
           style={{
             writingMode: "vertical-rl",
             transform: "rotate(180deg)",
             bottom: "1.25rem",
-            color: "var(--ink-muted)",
+            color: "var(--color-ink)",
             letterSpacing: "0.16em",
           }}
         >
@@ -51,7 +51,7 @@ function Spine({ book }: { book: Book }) {
         <span
           aria-hidden="true"
           className="absolute top-3 block h-px"
-          style={{ width: "60%", background: "var(--accent)", opacity: out ? 0.8 : 0.25 }}
+          style={{ width: "60%", background: "var(--color-ink)", opacity: out ? 0.75 : 0.2 }}
         />
       </button>
     </div>
@@ -70,15 +70,15 @@ export function Shelf({ books }: { books: Book[] }) {
       <div
         aria-hidden="true"
         className="h-px w-full"
-        style={{ background: "var(--ink)", opacity: 0.35 }}
+        style={{ background: "var(--room-fg)", opacity: 0.4 }}
       />
       <ul className="m-0 mt-8 grid list-none gap-x-10 gap-y-3 p-0 sm:grid-cols-2">
         {books.map((book) => (
           <li key={book.slug} className="m-0">
-            <span className="u-exhibit-title" style={{ fontSize: "1rem" }}>
+            <span className="t-body" style={{ fontFamily: "var(--font-davinci)", fontSize: "16px" }}>
               {book.title}
             </span>
-            <span className="u-micro ml-3" style={{ color: "var(--ink-faint)" }}>
+            <span className="t-micro ml-3" style={{ color: "var(--room-muted)" }}>
               {book.author}
             </span>
           </li>

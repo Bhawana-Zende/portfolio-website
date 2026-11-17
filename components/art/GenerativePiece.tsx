@@ -12,8 +12,12 @@ type School = "horizon" | "arc" | "rule" | "slat" | "stone";
 
 const SCHOOLS: readonly School[] = ["horizon", "arc", "rule", "slat", "stone"];
 
-const INK = "var(--ink)";
-const ACCENT = "var(--accent)";
+// No saturated colour anywhere: the system is warm grays and black.
+// A piece keeps its own ground so it reads as a print on the wall
+// rather than a surface that inverts with the room.
+const INK = "var(--color-ink)";
+const ACCENT = "var(--color-graphite)";
+const GROUND = "var(--color-bone)";
 
 function horizon(r: Rand, w: number, h: number) {
   const bands = Math.floor(between(r, 4, 8));
@@ -178,7 +182,7 @@ export function GenerativePiece({
       role="presentation"
       aria-hidden="true"
     >
-      <rect width={w} height={h} fill="var(--wall-recess)" />
+      <rect width={w} height={h} fill={GROUND} />
       <g>{draw(r, w, h)}</g>
     </svg>
   );

@@ -31,13 +31,13 @@ export function ExhibitDetail({
   const { previous, next } = neighbours(exhibit.slug);
 
   return (
-    <article className="mx-auto w-full max-w-[64rem] px-6 pb-[var(--spacing-room)] sm:px-10">
+    <article className="mx-auto w-full max-w-[64rem] px-5 pb-[var(--spacing-96)] sm:px-7">
       <div
-        className="relative mb-12 w-full overflow-hidden"
+        className="relative mb-[var(--spacing-52)] w-full overflow-hidden"
         style={{
           aspectRatio: "16 / 10",
-          background: "var(--wall-recess)",
-          border: "1px solid var(--hairline)",
+          background: "var(--room-placeholder)",
+          borderRadius: "var(--radius-cards)",
         }}
       >
         <Piece
@@ -48,15 +48,15 @@ export function ExhibitDetail({
         />
       </div>
 
-      <p className="u-micro m-0" style={{ color: "var(--accent)" }}>
+      <p className="t-micro" style={{ color: "var(--room-muted)" }}>
         {exhibit.category}
       </p>
 
-      <h1 className="u-exhibit-title m-0 mt-4" style={{ fontSize: "var(--text-room)" }}>
+      <h1 className="t-section mt-[16px]">
         {exhibit.title}
       </h1>
 
-      <dl className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-4">
+      <dl className="mt-[var(--spacing-40)] grid grid-cols-2 gap-[var(--spacing-28)] sm:grid-cols-4">
         {[
           ["Year", exhibit.year],
           ["Role", exhibit.role],
@@ -64,12 +64,11 @@ export function ExhibitDetail({
           ["Status", exhibit.status.replace("-", " ")],
         ].map(([label, value]) => (
           <div key={label}>
-            <dt className="u-micro m-0" style={{ color: "var(--ink-faint)" }}>
+            <dt className="t-micro" style={{ color: "var(--room-muted)" }}>
               {label}
             </dt>
             <dd
-              className="u-year m-0 mt-2"
-              style={{ fontSize: "var(--text-label)", color: "var(--ink)" }}
+              className="t-stat mt-[8px] block"
             >
               {value}
             </dd>
@@ -77,21 +76,21 @@ export function ExhibitDetail({
         ))}
       </dl>
 
-      <hr className="u-hairline my-12" />
+      <hr className="u-rule my-[var(--spacing-52)]" />
 
-      <div className="grid gap-12 md:grid-cols-[14rem_1fr]">
+      <div className="grid gap-[var(--spacing-40)] md:grid-cols-[14rem_1fr]">
         {[
           ["The problem", exhibit.story.problem],
           ["What I built", exhibit.story.built],
           ["Why it matters", exhibit.story.matters],
         ].map(([label, body]) => (
           <div key={label} className="contents">
-            <p className="u-label m-0" style={{ color: "var(--ink-faint)" }}>
+            <p className="t-micro" style={{ color: "var(--room-muted)" }}>
               {label}
             </p>
             <p
-              className="m-0 max-w-[40rem]"
-              style={{ color: "var(--ink-muted)", fontSize: "var(--text-body)" }}
+              className="t-body max-w-[62ch]"
+              style={{ fontSize: "16px" }}
             >
               {body}
             </p>
@@ -101,13 +100,13 @@ export function ExhibitDetail({
 
       {exhibit.outcomes.length > 0 ? (
         <>
-          <hr className="u-hairline my-12" />
-          <ul className="m-0 grid list-none gap-4 p-0 sm:grid-cols-2">
+          <hr className="u-rule my-[var(--spacing-52)]" />
+          <ul className="t-body m-0 grid list-none gap-[16px] p-0 sm:grid-cols-2">
             {exhibit.outcomes.map((line) => (
               <li
                 key={line}
                 className="m-0"
-                style={{ color: "var(--ink-muted)", fontSize: "var(--text-label)" }}
+                style={{ fontSize: "var(--text-body-sm)", opacity: 0.8 }}
               >
                 {line}
               </li>
@@ -117,15 +116,15 @@ export function ExhibitDetail({
       ) : null}
 
       {exhibit.gallery.length > 0 ? (
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        <div className="mt-[var(--spacing-52)] grid gap-[28px] sm:grid-cols-2">
           {exhibit.gallery.map((image) => (
             <div
               key={image.src}
               className="relative overflow-hidden"
               style={{
                 aspectRatio: "4 / 3",
-                background: "var(--wall-recess)",
-                border: "1px solid var(--hairline)",
+                background: "var(--room-placeholder)",
+                borderRadius: "var(--radius-cards)",
               }}
             >
               <Piece src={image.src} alt={image.alt} seed={image.src} ratio={1.33} />
@@ -135,13 +134,12 @@ export function ExhibitDetail({
       ) : null}
 
       {exhibit.links.length > 0 ? (
-        <ul className="mt-12 flex list-none flex-wrap gap-6 p-0">
+        <ul className="mt-[var(--spacing-52)] flex list-none flex-wrap gap-[28px] p-0">
           {exhibit.links.map((link) => (
             <li key={link.href} className="m-0">
               <a
                 href={link.href}
-                className="u-label"
-                style={{ color: "var(--accent)" }}
+                className="c-link t-label"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -152,7 +150,7 @@ export function ExhibitDetail({
         </ul>
       ) : null}
 
-      <hr className="u-hairline my-12" />
+      <hr className="u-rule my-[var(--spacing-52)]" />
 
       <nav className="flex items-start justify-between gap-6" aria-label="Exhibits">
         {previous ? (
@@ -188,12 +186,11 @@ function ExhibitStep({
 
   const content = (
     <>
-      <span className="u-micro block" style={{ color: "var(--ink-faint)" }}>
+      <span className="t-micro block" style={{ color: "var(--room-muted)" }}>
         {label}
       </span>
       <span
-        className="u-exhibit-title mt-3 block"
-        style={{ fontSize: "clamp(1.0625rem, 1rem + 0.4vw, 1.25rem)" }}
+        className="t-caption mt-[12px] block"
       >
         {exhibit.title}
       </span>

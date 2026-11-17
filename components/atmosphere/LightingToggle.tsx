@@ -38,8 +38,8 @@ export function LightingToggle() {
     >
       <span
         aria-hidden="true"
-        className="room-surface absolute inset-0 rounded-full border opacity-60 group-hover:opacity-100"
-        style={{ borderColor: "var(--hairline)" }}
+        className="absolute inset-0 rounded-full border opacity-50 group-hover:opacity-100"
+        style={{ borderColor: "currentColor" }}
       />
       <svg
         viewBox="0 0 32 32"
@@ -69,9 +69,8 @@ export function LightingToggle() {
           cx="16"
           cy="16"
           r="9"
-          fill="var(--ink)"
+          fill="currentColor"
           mask="url(#eclipse)"
-          className="room-surface"
         />
       </svg>
     </button>

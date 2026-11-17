@@ -1,17 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { GenerativePiece } from "@/components/art/GenerativePiece";
 import type { Exhibit } from "@/content/schema";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 /**
- * A piece on a wall: mat, hairline frame, placard beneath.
+ * A piece on a wall: a Bone card at the 9px card radius, an Ash image
+ * container, and a wall label beneath.
  *
- * Hovering lights it — a spotlight that follows where the visitor is
- * looking — and eases the placard in. The whole thing is one button with
- * a descriptive label, so a keyboard visitor gets the same piece, lit the
- * same way, in the same order along the wall.
+ * The system is flat — no shadows, no gradients — so reaching for a
+ * piece is shown by the frame taking full contrast and the View pill
+ * arriving, not by a spotlight or a lift.
  */
 export function Frame({
   exhibit,
@@ -20,6 +20,7 @@ export function Frame({
   className = "",
   eager = false,
   index = 0,
+  shape = "rect",
 }: {
   exhibit: Exhibit;
   onOpen: (slug: string) => void;
@@ -27,52 +28,41 @@ export function Frame({
   className?: string;
   eager?: boolean;
   index?: number;
+  /** The circle is the system's image shape after the full-bleed rectangle. */
+  shape?: "rect" | "circle";
 }) {
-  const ref = useRef<HTMLButtonElement>(null);
-  const [lit, setLit] = useState(false);
+  const [near, setNear] = useState(false);
   const reduced = useReducedMotion();
-
-  function trackLight(event: React.PointerEvent<HTMLButtonElement>) {
-    if (reduced) return;
-    const node = ref.current;
-    if (!node) return;
-    const box = node.getBoundingClientRect();
-    node.style.setProperty("--spot-x", `${event.clientX - box.left}px`);
-    node.style.setProperty("--spot-y", `${event.clientY - box.top}px`);
-  }
-
   const isImage = !exhibit.coverImage.src.startsWith("generative:");
+  const circular = shape === "circle";
 
   return (
-    <figure className={`group m-0 ${className}`}>
+    <figure className={`m-0 ${className}`}>
       <button
-        ref={ref}
         type="button"
         data-exhibit={exhibit.slug}
         onClick={() => onOpen(exhibit.slug)}
-        onPointerMove={trackLight}
-        onPointerEnter={() => setLit(true)}
-        onPointerLeave={() => setLit(false)}
-        onFocus={() => setLit(true)}
-        onBlur={() => setLit(false)}
+        onPointerEnter={() => setNear(true)}
+        onPointerLeave={() => setNear(false)}
+        onFocus={() => setNear(true)}
+        onBlur={() => setNear(false)}
         aria-label={`View exhibit: ${exhibit.title}, ${exhibit.year}`}
-        className="relative block w-full overflow-hidden md:cursor-none"
+        className="relative block w-full cursor-pointer text-left"
         style={{
-          // the pointer is only replaced where the "View" circle can follow it
-          cursor: reduced ? "pointer" : undefined,
-          // the mat around the piece, as a passe-partout
-          padding: "clamp(0.75rem, 2vw, 1.5rem)",
-          background: "var(--wall-recess)",
-          border: "1px solid var(--hairline)",
-          transition: reduced
-            ? "none"
-            : "transform 900ms cubic-bezier(0.22,1,0.36,1)",
-          transform: lit && !reduced ? "translateY(-4px)" : "none",
+          padding: circular ? 0 : "var(--card-padding)",
+          background: circular ? "transparent" : "var(--room-card)",
+          border: circular ? "0" : `1px solid ${near ? "currentColor" : "var(--room-rule)"}`,
+          borderRadius: circular ? "50%" : "var(--radius-cards)",
+          transition: reduced ? "none" : "border-color 400ms cubic-bezier(0.4,0,0.2,1)",
         }}
       >
         <span
           className="relative block overflow-hidden"
-          style={{ aspectRatio: String(ratio) }}
+          style={{
+            aspectRatio: circular ? "1" : String(ratio),
+            borderRadius: circular ? "50%" : "var(--radius-sm)",
+            background: "var(--room-placeholder)",
+          }}
         >
           {isImage ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -86,78 +76,37 @@ export function Frame({
           ) : (
             <GenerativePiece
               seed={exhibit.slug}
-              ratio={ratio}
+              ratio={circular ? 1 : ratio}
               index={index}
-              className="h-full w-full"
+              className="h-full w-full object-cover"
             />
           )}
-
-          {/* the spotlight, following the pointer across the piece */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              opacity: lit && !reduced ? 1 : 0,
-              transition: "opacity 700ms cubic-bezier(0.4,0,0.2,1)",
-              background:
-                "radial-gradient(14rem 14rem at var(--spot-x, 50%) var(--spot-y, 50%), var(--light-core), transparent 70%)",
-              mixBlendMode: "soft-light",
-            }}
-          />
         </span>
 
-        {/* the "View" circle the cursor becomes over a piece */}
+        {/* the one filled control, arriving when you reach for the piece */}
         <span
           aria-hidden="true"
-          className="u-micro pointer-events-none absolute flex items-center justify-center rounded-full"
+          className="c-pill absolute"
           style={{
-            left: "var(--spot-x, 50%)",
-            top: "var(--spot-y, 50%)",
-            width: "4.5rem",
-            height: "4.5rem",
-            marginLeft: "-2.25rem",
-            marginTop: "-2.25rem",
-            border: "1px solid var(--hairline)",
-            background: "var(--wall)",
-            color: "var(--ink-muted)",
-            opacity: lit && !reduced ? 1 : 0,
-            transform: `scale(${lit && !reduced ? 1 : 0.6})`,
-            transition:
-              "opacity 400ms cubic-bezier(0.4,0,0.2,1), transform 400ms cubic-bezier(0.22,1,0.36,1)",
+            right: circular ? "50%" : "var(--card-padding)",
+            bottom: circular ? "-18px" : "var(--card-padding)",
+            transform: circular ? "translateX(50%)" : "none",
+            opacity: near ? 1 : 0,
+            transition: reduced ? "none" : "opacity 320ms cubic-bezier(0.4,0,0.2,1)",
           }}
         >
           View
         </span>
       </button>
 
-      <figcaption
-        className="mt-5"
-        style={{
-          opacity: lit ? 1 : 0.72,
-          transform: lit && !reduced ? "translateY(0)" : "translateY(3px)",
-          transition: reduced
-            ? "none"
-            : "opacity 600ms cubic-bezier(0.4,0,0.2,1), transform 600ms cubic-bezier(0.22,1,0.36,1)",
-        }}
-      >
-        <p className="u-exhibit-title m-0" style={{ fontSize: "clamp(1.0625rem, 0.95rem + 0.5vw, 1.375rem)" }}>
-          {exhibit.title}
-        </p>
-        <p className="u-micro m-0 mt-2" style={{ color: "var(--ink-faint)" }}>
-          <span className="u-year">{exhibit.year}</span>
-          {" · "}
-          {exhibit.category}
-          {" · "}
-          {exhibit.role}
+      <figcaption className={circular ? "mt-[28px] text-center" : "mt-[20px]"}>
+        <p className="t-caption">{exhibit.title}</p>
+        <p className="t-micro mt-[8px]" style={{ color: "var(--room-muted)" }}>
+          {exhibit.year} · {exhibit.category} · {exhibit.role}
         </p>
         <p
-          className="m-0 mt-3 max-w-[28rem]"
-          style={{
-            color: "var(--ink-muted)",
-            fontSize: "var(--text-label)",
-            letterSpacing: "0.01em",
-            lineHeight: 1.6,
-          }}
+          className="t-body mt-[12px] max-w-[42ch]"
+          style={{ opacity: 0.78, fontSize: "var(--text-body-sm)" }}
         >
           {exhibit.summary}
         </p>

@@ -7,18 +7,25 @@ import { Inscription } from "./Inscription";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 const BLACKOUT_MS = 1500;
-/** If the animation engine never ticks, the room lights itself anyway. */
 const FAILSAFE_MS = 4000;
 
 /**
- * The entrance. The room is dark, the lights come up, and the name is
- * lifted through its masks before anything else is readable.
+ * The entrance, built on the system's hero: a small centred type cluster
+ * over a wordmark set large enough to crop at the viewport edges. The
+ * name should feel bigger than the screen — that's the whole gesture.
  *
  * The darkness is cleared by state and a timer, never by the animation
- * timeline: a stalled ticker — a background tab, a dropped frame budget,
- * a GSAP failure — must not be able to leave a visitor in a dark room.
+ * timeline, so a stalled ticker can't leave a visitor in a dark room.
  */
-export function Foyer({ name, intro }: { name: string; intro: string }) {
+export function Foyer({
+  name,
+  hero,
+  stats,
+}: {
+  name: string;
+  hero: { top: string; connector: string; bottom: string };
+  stats: { label: string; value: string }[];
+}) {
   const root = useRef<HTMLElement>(null);
   const [admitted, setAdmitted] = useState(false);
   const [lit, setLit] = useState(false);
@@ -26,7 +33,6 @@ export function Foyer({ name, intro }: { name: string; intro: string }) {
 
   const onAdmitted = useCallback(() => setAdmitted(true), []);
 
-  // the blackout always comes down, on a plain timer
   useEffect(() => {
     if (!admitted) return;
     const timer = window.setTimeout(
@@ -63,23 +69,18 @@ export function Foyer({ name, intro }: { name: string; intro: string }) {
       });
 
       timeline
-        .from("[data-inscription-glyph]", {
-          yPercent: 108,
-          duration: 1.25,
-          stagger: 0.055,
+        .from("[data-foyer-fade]", {
+          autoAlpha: 0,
+          y: 16,
+          duration: 0.9,
+          stagger: 0.14,
         })
         .from(
-          "[data-foyer-rule]",
-          { scaleX: 0, duration: 1.1, ease: "power2.inOut" },
-          "-=0.55",
-        )
-        .from(
-          "[data-foyer-fade]",
-          { autoAlpha: 0, y: 14, duration: 1, stagger: 0.18 },
-          "-=0.75",
+          "[data-inscription-glyph]",
+          { yPercent: 106, duration: 1.3, stagger: 0.05 },
+          "-=0.5",
         );
 
-      // if the timeline hasn't finished by now, show everything outright
       failsafe = window.setTimeout(settle, FAILSAFE_MS);
     }, node);
 
@@ -90,25 +91,21 @@ export function Foyer({ name, intro }: { name: string; intro: string }) {
   }, [admitted, reduced]);
 
   function stepInside() {
-    const threshold = document.getElementById("threshold");
-    if (!threshold) return;
-    threshold.scrollIntoView({
-      behavior: reduced ? "auto" : "smooth",
-      block: "start",
-    });
+    document
+      .querySelector('[data-room="gallery-i"]')
+      ?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   }
 
   return (
     <>
       {!admitted ? <AdmissionTicket onAdmitted={onAdmitted} /> : null}
 
-      {/* darkness: faded by CSS, removed by a timer */}
       {!lit ? (
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 z-40"
           style={{
-            background: "#0b0a09",
+            background: "var(--color-ink)",
             opacity: admitted ? 0 : 1,
             transition: reduced
               ? "none"
@@ -119,59 +116,49 @@ export function Foyer({ name, intro }: { name: string; intro: string }) {
 
       <section
         ref={root}
+        id="foyer"
+        data-room="foyer"
+        data-tone="light"
         aria-label="Foyer"
-        className="relative flex min-h-[100svh] flex-col justify-between px-6 pt-28 pb-10 sm:px-10 lg:px-16"
+        className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-[96px] pb-0"
       >
-        <div className="relative z-10 flex flex-1 flex-col justify-center">
-          <p
-            data-foyer-fade=""
-            className="u-micro m-0 mb-10"
-            style={{ color: "var(--ink-faint)" }}
-          >
-            Foyer
+        {/* the small cluster: who, how much, and the way in */}
+        <div className="flex flex-1 flex-col items-center justify-center px-5 text-center">
+          <p data-foyer-fade="" className="t-micro" style={{ color: "var(--room-muted)" }}>
+            The Museum
           </p>
 
-          <Inscription text={name} />
-
-          <hr
-            data-foyer-rule=""
-            className="u-hairline my-9 w-full max-w-[34rem] origin-left"
-          />
-
-          <p
-            data-foyer-fade=""
-            className="u-lede m-0 max-w-[32rem]"
-            style={{ color: "var(--ink-muted)" }}
-          >
-            {intro}
+          <p data-foyer-fade="" className="t-heading-lg mt-[20px]">
+            {hero.top}
+            <br />
+            <em style={{ fontStyle: "italic" }}>{hero.connector}</em>{" "}
+            {hero.bottom}
           </p>
-        </div>
 
-        <div
-          data-foyer-fade=""
-          className="relative z-10 flex items-end justify-between gap-6"
-        >
+          <div
+            data-foyer-fade=""
+            className="mt-[28px] flex flex-wrap items-center justify-center gap-x-[28px] gap-y-[8px]"
+          >
+            {stats.map((stat) => (
+              <span key={stat.label} className="t-stat">
+                {stat.label}: {stat.value}
+              </span>
+            ))}
+          </div>
+
           <button
+            data-foyer-fade=""
             type="button"
             onClick={stepInside}
-            className="group flex items-center gap-4 py-2"
+            className="c-pill mt-[28px]"
           >
-            <span
-              aria-hidden="true"
-              className="room-surface block h-10 w-px transition-[height] duration-700 group-hover:h-16"
-              style={{ background: "var(--ink-faint)" }}
-            />
-            <span className="u-label" style={{ color: "var(--ink-muted)" }}>
-              Enter
-            </span>
+            Enter the museum
           </button>
+        </div>
 
-          <p
-            className="u-micro m-0 hidden text-right sm:block"
-            style={{ color: "var(--ink-faint)" }}
-          >
-            Scroll to walk in
-          </p>
+        {/* the wordmark, cut off by both walls on purpose */}
+        <div className="t-display-frame relative">
+          <Inscription text={name} />
         </div>
       </section>
     </>

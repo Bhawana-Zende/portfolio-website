@@ -115,9 +115,17 @@ export function Museum({
 
   return (
     <>
-      <Foyer name={site.name} intro={site.intro} />
+      <Foyer
+        name={site.name}
+        hero={site.hero}
+        stats={[
+          { label: "Rooms", value: String(ROOMS.length - 1) },
+          { label: "Exhibits", value: String(ventures.length + writing.length + art.length) },
+          { label: "Books", value: String(books.length) },
+        ]}
+      />
 
-      <Room id="gallery-i">
+      <Room id="gallery-i" tone="dark" wireframe="chevron">
         <div className="grid gap-[clamp(3rem,6vw,5rem)] sm:grid-cols-2 lg:grid-cols-3">
           {ventures.map((exhibit, index) => (
             <Frame
@@ -131,7 +139,7 @@ export function Museum({
         </div>
       </Room>
 
-      <Room id="gallery-ii">
+      <Room id="gallery-ii" tone="light">
         <div className="grid gap-[clamp(3rem,6vw,5rem)] sm:grid-cols-2">
           {writing.map((exhibit, index) => (
             <Frame
@@ -145,18 +153,18 @@ export function Museum({
         </div>
       </Room>
 
-      <Room id="gallery-iii" wide>
+      <Room id="gallery-iii" tone="dark" wide wireframe="corners">
         <LongWall>
           {art.map((exhibit, index) => (
             <div
               key={exhibit.slug}
               className="shrink-0"
-              style={{ width: "min(26rem, 78vw)", scrollSnapAlign: "start" }}
+              style={{ width: "min(22rem, 72vw)", scrollSnapAlign: "start" }}
             >
               <Frame
                 exhibit={exhibit}
                 onOpen={openExhibit}
-                ratio={0.74}
+                shape="circle"
                 index={index}
               />
             </div>
@@ -164,22 +172,18 @@ export function Museum({
         </LongWall>
       </Room>
 
-      <Room id="gallery-iv">
+      <Room id="gallery-iv" tone="light">
         <Shelf books={books} />
       </Room>
 
-      <Room id="corridor" wide>
+      <Room id="corridor" tone="dark" wide wireframe="diamond">
         <Milestones milestones={timeline} />
-        <a
-          href="/cv.pdf"
-          className="u-label mt-12 inline-block px-5 py-3"
-          style={{ color: "var(--ink-muted)", border: "1px solid var(--hairline)" }}
-        >
+        <a href="/cv.pdf" className="c-pill mt-[var(--spacing-40)]">
           Download CV
         </a>
       </Room>
 
-      <Room id="exit">
+      <Room id="exit" tone="light">
         <Guestbook />
       </Room>
 
@@ -228,12 +232,12 @@ function ProgressLine() {
     <div
       aria-hidden="true"
       className="pointer-events-none fixed inset-x-0 bottom-0 z-[58] h-px"
-      style={{ background: "var(--hairline)" }}
+      style={{ background: "transparent" }}
     >
       <div
         ref={ref}
         className="h-full w-full origin-left"
-        style={{ background: "var(--accent)", transform: "scaleX(0)" }}
+        style={{ background: "var(--color-ash)", transform: "scaleX(0)" }}
       />
     </div>
   );

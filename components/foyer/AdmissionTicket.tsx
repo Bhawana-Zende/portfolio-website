@@ -77,7 +77,7 @@ export function AdmissionTicket({ onAdmitted }: { onAdmitted: () => void }) {
     <div
       className="fixed inset-0 z-[70] flex items-center justify-center"
       style={{
-        background: "#0b0a09",
+        background: "var(--color-ink)",
         opacity: leaving ? 0 : 1,
         transition: reduced ? "none" : "opacity 420ms cubic-bezier(0.4,0,0.2,1)",
       }}
@@ -87,8 +87,9 @@ export function AdmissionTicket({ onAdmitted }: { onAdmitted: () => void }) {
       <div
         className="relative px-9 py-8"
         style={{
-          color: "#ede7da",
-          border: "1px solid #ede7da38",
+          color: "var(--color-paper)",
+          border: "1px solid var(--color-graphite)",
+          borderRadius: "var(--radius-cards)",
           // perforated edge, torn from the roll
           maskImage:
             "radial-gradient(circle 4px at 0 50%, transparent 98%, #000 100%), radial-gradient(circle 4px at 100% 50%, transparent 98%, #000 100%)",
@@ -100,23 +101,17 @@ export function AdmissionTicket({ onAdmitted }: { onAdmitted: () => void }) {
             : "ticket-settle 700ms cubic-bezier(0.22,1,0.36,1) both",
         }}
       >
-        <p className="u-micro m-0" style={{ color: "#a49c8c" }}>
+        <p className="t-micro" style={{ color: "var(--color-ash)" }}>
           Admit one
         </p>
         <p
-          className="m-0 mt-3"
-          style={{
-            fontFamily: "var(--font-newsreader), serif",
-            fontSize: "1.5rem",
-            fontWeight: 300,
-            letterSpacing: "-0.01em",
-          }}
+          className="t-heading-sm mt-[16px]"
         >
           The Museum
         </p>
         <p
-          className="u-label m-0 mt-5"
-          style={{ color: "#9caa86", fontVariantNumeric: "tabular-nums" }}
+          className="t-micro mt-[20px]"
+          style={{ color: "var(--color-ash)" }}
         >
           {date}
         </p>

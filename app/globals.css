@@ -1,183 +1,320 @@
 @import "tailwindcss";
 
-/* ───────────────────────────────────────────────────────────────
-   THE MUSEUM — design tokens
-   Two lighting modes. Nothing here is "dark mode": the room is
-   either lit by daylight or by spotlights after hours.
-   ─────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   STRUCTURED — Renaissance gallery on putty paper
+   Token values are the design system's, verbatim. Everything below
+   the token blocks is how the museum uses them.
+   ═══════════════════════════════════════════════════════════════ */
 
-:root,
-[data-theme="daylight"] {
-  --wall: #f4f1ea;          /* warm plaster */
-  --wall-recess: #ebe6db;   /* a wall set back from the light */
-  --ink: #1c1a17;           /* charcoal, never pure black */
-  --ink-muted: #5a544a;     /* placard metadata */
-  --ink-faint: #716a59;     /* AA on plaster: 4.8:1 */
-  --accent: #5f6b4f;        /* moss — "you are here" only */
-  --accent-soft: #5f6b4f1f;
-  --hairline: #1c1a1733;
+@theme {
+  /* Colors */
+  --color-putty: #c4c3b6;
+  --color-ink: #000000;
+  --color-bone: #e7e5e4;
+  --color-chalk: #ebebeb;
+  --color-vellum: #dfdcd5;
+  --color-graphite: #595855;
+  --color-ash: #808080;
+  --color-paper: #ffffff;
 
-  /* the single light source */
-  --light-core: #fffdf6;
-  --light-falloff: #f4f1ea00;
-  --light-strength: 0.55;
-  --light-size: 68vmax;
+  /* Typography — the licensed faces first, then the documented
+     substitutes. next/font supplies Playfair Display and Inter. */
+  --font-davinci: "Davinci", var(--font-playfair), Canela, "Tiempos Headline",
+    "GT Super", "Playfair Display", ui-serif, Georgia, serif;
+  --font-helvetica-now: "Helvetica Now", var(--font-inter), Inter,
+    "Neue Haas Grotesk", "Söhne", "Helvetica Neue", ui-sans-serif, system-ui,
+    sans-serif;
 
-  --grain-opacity: 0.032;
+  /* Typography — Scale */
+  --text-body-sm: 15px;
+  --leading-body-sm: 1.5;
+  --text-subheading: 22px;
+  --leading-subheading: 1.33;
+  --tracking-subheading: -0.11px;
+  --text-heading-sm: 26px;
+  --leading-heading-sm: 1.33;
+  --tracking-heading-sm: -0.13px;
+  --text-heading: 43px;
+  --leading-heading: 1.1;
+  --tracking-heading: -0.215px;
+  --text-heading-lg: 52px;
+  --leading-heading-lg: 1;
+  --tracking-heading-lg: -0.47px;
+  --text-display: 374px;
+  --leading-display: 0.84;
+  --tracking-display: -3.37px;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-28: 28px;
+  --spacing-32: 32px;
+  --spacing-36: 36px;
+  --spacing-40: 40px;
+  --spacing-52: 52px;
+  --spacing-60: 60px;
+  --spacing-96: 96px;
+  --spacing-168: 168px;
+
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-lg: 9px;
+  --radius-3xl: 28.8px;
+}
+
+:root {
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+
+  /* Layout */
+  --section-gap: 80px;
+  --card-padding: 24px;
+  --element-gap: 6px;
+
+  /* Named Radii */
+  --radius-cards: 9px;
+  --radius-links: 2px;
+  --radius-buttons: 28.8px;
+
+  /* Surfaces */
+  --surface-putty-canvas: #c4c3b6;
+  --surface-bone-card: #e7e5e4;
+  --surface-chalk-footer: #ebebeb;
+  --surface-ink-room: #000000;
+
   color-scheme: light;
 }
 
+/* ───────────────────────────────────────────────────────────────
+   ROOMS
+   Sections alternate light and dark with hard cuts, never gradients.
+   The lighting toggle inverts which is which, so the whole building
+   flips rather than fading — evening is the same gallery after hours.
+   ─────────────────────────────────────────────────────────────── */
+
+[data-tone] {
+  background-color: var(--room-bg);
+  color: var(--room-fg);
+}
+
+[data-theme="daylight"] [data-tone="light"],
+[data-theme="evening"] [data-tone="dark"] {
+  --room-bg: var(--color-putty);
+  --room-fg: var(--color-ink);
+  --room-card: var(--color-bone);
+  --room-rule: var(--color-vellum);
+  --room-muted: var(--color-graphite); /* ≥24px only — 4.01:1 on putty */
+  --room-label: var(--color-ink);
+  --room-placeholder: var(--color-ash);
+}
+
+[data-theme="daylight"] [data-tone="dark"],
+[data-theme="evening"] [data-tone="light"] {
+  --room-bg: var(--color-ink);
+  --room-fg: var(--color-paper);
+  --room-card: var(--color-ink);
+  --room-rule: var(--color-graphite);
+  --room-muted: var(--color-ash); /* 5.3:1 on ink */
+  --room-label: var(--color-paper);
+  --room-placeholder: var(--color-graphite);
+}
+
 [data-theme="evening"] {
-  --wall: #141311;          /* the room after closing */
-  --wall-recess: #0e0d0c;
-  --ink: #ede7da;
-  --ink-muted: #a49c8c;
-  --ink-faint: #8a8273;     /* AA on night: 4.9:1 */
-  --accent: #9caa86;
-  --accent-soft: #9caa8626;
-  --hairline: #ede7da2e;
-
-  --light-core: #fff4d6;
-  --light-falloff: #14131100;
-  --light-strength: 0.16;
-  --light-size: 52vmax;
-
-  --grain-opacity: 0.05;
   color-scheme: dark;
 }
 
-@theme inline {
-  --color-wall: var(--wall);
-  --color-wall-recess: var(--wall-recess);
-  --color-ink: var(--ink);
-  --color-ink-muted: var(--ink-muted);
-  --color-ink-faint: var(--ink-faint);
-  --color-accent: var(--accent);
-  --color-hairline: var(--hairline);
-
-  --font-display: var(--font-newsreader);
-  --font-sans: var(--font-inter);
-
-  /* fluid scale — placard to inscription */
-  --text-micro: clamp(0.625rem, 0.6rem + 0.12vw, 0.6875rem);
-  --text-label: clamp(0.6875rem, 0.66rem + 0.15vw, 0.75rem);
-  --text-body: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
-  --text-lede: clamp(1.0625rem, 1rem + 0.5vw, 1.375rem);
-  --text-title: clamp(1.75rem, 1.4rem + 1.8vw, 3rem);
-  --text-room: clamp(2.5rem, 1.8rem + 4vw, 5rem);
-  --text-inscription: clamp(2.75rem, 1.2rem + 8.5vw, 9.5rem);
-
-  /* 8px rhythm, generous */
-  --spacing-room: clamp(5rem, 4rem + 8vw, 11rem);
-}
-
-/* ── the dimming of the lights ───────────────────────────────── */
-/* Scoped to the surfaces that actually carry the room's colour,
-   so switching modes costs a handful of transitions, not a page. */
-.room-surface {
+/* the dimming of the lights: 1.2s, never an instant swap */
+.room-surface,
+[data-tone] {
   transition:
     background-color 1200ms cubic-bezier(0.4, 0, 0.2, 1),
     color 1200ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 1200ms cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-color 1200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html {
-  background-color: var(--wall);
+  background-color: var(--color-putty);
   -webkit-text-size-adjust: 100%;
 }
 
+[data-theme="evening"] html,
+html[data-theme="evening"] {
+  background-color: var(--color-ink);
+}
+
 body {
-  background-color: var(--wall);
-  color: var(--ink);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--text-body);
-  line-height: 1.65;
-  font-feature-settings: "kern" 1, "liga" 1, "cv11" 1;
+  margin: 0;
+  background-color: transparent;
+  font-family: var(--font-helvetica-now);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  font-weight: var(--font-weight-regular);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-/* ── museum-label typography ─────────────────────────────────── */
-.u-inscription {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
-  font-weight: 300;
-  font-size: var(--text-inscription);
-  line-height: 0.92;
-  letter-spacing: -0.025em;
+/* ───────────────────────────────────────────────────────────────
+   TYPE
+   The serif does the emotional work, the grotesk the functional.
+   They never compete: serif for moments, grotesk for systems.
+   ─────────────────────────────────────────────────────────────── */
+
+/* the wordmark — intentionally larger than the screen */
+.t-display {
+  font-family: var(--font-davinci);
+  font-weight: var(--font-weight-medium);
+  /* 374px is the token; this name is longer than the brand's, so the
+     size is tuned to the system's intent — kiss both walls, stay read. */
+  font-size: clamp(3rem, 15.6vw, var(--text-display));
+  line-height: var(--leading-display);
+  letter-spacing: -0.009em;
+  margin: 0;
 }
 
-.u-room-title {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
-  font-weight: 350;
-  font-size: var(--text-room);
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+/* The wordmark sits on the floor of the room and runs past both walls.
+   The serif's line box is far taller than its glyphs, so the frame is
+   clipped to cap height — otherwise the name floats in dead space. */
+.t-display-frame {
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: clamp(2.2rem, 11.3vw, 270px);
+  align-items: flex-end;
 }
 
-.u-exhibit-title {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
-  font-weight: 400;
-  font-size: var(--text-title);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+.t-display-frame .t-display {
+  transform: translateY(0.165em);
 }
 
-.u-lede {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
-  font-weight: 300;
-  font-size: var(--text-lede);
-  line-height: 1.5;
-  font-style: italic;
+.t-section {
+  font-family: var(--font-davinci);
+  font-weight: var(--font-weight-regular);
+  font-size: clamp(2.75rem, 7vw, 94px);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  margin: 0;
 }
 
-/* tracked-out uppercase, the way a wall label is set */
-.u-label {
-  font-size: var(--text-label);
-  font-weight: 500;
+.t-heading-lg {
+  font-family: var(--font-davinci);
+  font-weight: var(--font-weight-regular);
+  font-size: clamp(2rem, 3.6vw, var(--text-heading-lg));
+  line-height: var(--leading-heading-lg);
+  letter-spacing: var(--tracking-heading-lg);
+  margin: 0;
+}
+
+.t-heading-sm {
+  font-family: var(--font-davinci);
+  font-weight: var(--font-weight-regular);
+  font-size: 34px;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* serif at its smallest documented size — captions under a vignette */
+.t-caption {
+  font-family: var(--font-davinci);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-subheading);
+  line-height: var(--leading-subheading);
+  letter-spacing: var(--tracking-subheading);
+  margin: 0;
+}
+
+.t-body {
+  font-family: var(--font-helvetica-now);
+  font-size: 16px;
+  line-height: var(--leading-body-sm);
+  margin: 0;
+}
+
+.t-label {
+  font-family: var(--font-helvetica-now);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+/* the 9px micro-text the system uses for wall-label detail */
+.t-micro {
+  font-family: var(--font-helvetica-now);
+  font-size: 9px;
+  font-weight: var(--font-weight-regular);
+  line-height: 1.25;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
+  margin: 0;
 }
 
-.u-micro {
-  font-size: var(--text-micro);
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+.t-stat {
+  font-family: var(--font-helvetica-now);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-body-sm);
   font-variant-numeric: tabular-nums;
 }
 
-.u-year {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-}
-
-.u-hairline {
+.u-rule {
   border: 0;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--room-rule);
 }
 
-/* ── focus: visible, and in the museum's own language ────────── */
+/* ── the one filled control: a compact capsule ───────────────── */
+.c-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 17px;
+  border-radius: var(--radius-buttons);
+  border: 0;
+  background: var(--room-fg);
+  color: var(--room-bg);
+  font-family: var(--font-helvetica-now);
+  font-size: 12px;
+  font-weight: var(--font-weight-regular);
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+/* ghost link: text only, underline on hover */
+.c-link {
+  border-radius: var(--radius-links);
+  text-decoration: none;
+  color: inherit;
+}
+
+.c-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid currentColor;
   outline-offset: 3px;
-  border-radius: 1px;
+  border-radius: var(--radius-links);
 }
 
 ::selection {
-  background: var(--accent-soft);
-  color: var(--ink);
+  background: var(--room-fg);
+  color: var(--room-bg);
 }
 
-/* ── the masked reveal, as light passing over cut letters ────── */
+/* ── the inscription's per-glyph masks ───────────────────────── */
 .reveal-mask {
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
 }
 
 .reveal-mask > span {
@@ -185,7 +322,6 @@ body {
   will-change: transform;
 }
 
-/* ── when the visitor would rather the room stayed still ─────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -196,16 +332,8 @@ body {
     scroll-behavior: auto !important;
   }
 
-  .room-surface {
+  .room-surface,
+  [data-tone] {
     transition-duration: 160ms !important;
   }
-}
-
-/* ── plaster grain: multiplies into daylight, lifts in evening ── */
-[data-theme="daylight"] .grain {
-  mix-blend-mode: multiply;
-}
-
-[data-theme="evening"] .grain {
-  mix-blend-mode: overlay;
 }

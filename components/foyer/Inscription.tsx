@@ -1,25 +1,26 @@
 "use client";
 
 /**
- * Letters cut into a wall. Each glyph sits in its own mask so the
- * entrance timeline can lift them through it — the reveal reads as
- * light crossing the inscription, not as text fading in.
+ * The wordmark. Each glyph sits in its own mask so the entrance can lift
+ * it through — the reveal reads as light crossing cut letters rather
+ * than as text fading in.
  *
- * The visible glyphs are decorative; the accessible name is on the
- * wrapper, so a screen reader hears one name instead of thirteen.
+ * Set at display scale, it runs past the right-hand wall at desktop
+ * widths. That overflow is the point: the name is bigger than the room.
+ * The accessible name is on the wrapper, so a screen reader hears it
+ * once instead of thirteen times.
  */
 export function Inscription({ text }: { text: string }) {
   const words = text.split(" ");
 
   return (
-    // flex-wrap, not inline text: the words must be able to break onto a
-    // second line on a phone without a breakable space between the masks
-    <h1
-      className="u-inscription m-0 flex flex-wrap items-baseline gap-x-[0.26em]"
-      aria-label={text}
-    >
+    <h1 className="t-display flex whitespace-nowrap" aria-label={text}>
       {words.map((word, wordIndex) => (
-        <span key={`${word}-${wordIndex}`} className="inline-block">
+        <span
+          key={`${word}-${wordIndex}`}
+          className="inline-block"
+          style={{ marginRight: wordIndex < words.length - 1 ? "0.22em" : 0 }}
+        >
           {Array.from(word).map((char, charIndex) => (
             <span
               key={`${char}-${charIndex}`}

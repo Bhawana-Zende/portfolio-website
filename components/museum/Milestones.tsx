@@ -13,26 +13,26 @@ export function Milestones({ milestones }: { milestones: Milestone[] }) {
           <div
             aria-hidden="true"
             className="mb-7 h-px w-full"
-            style={{ background: "var(--hairline)" }}
+            style={{ background: "var(--room-rule)" }}
           />
           <div
             aria-hidden="true"
             className="absolute top-0 left-0 h-2 w-px"
-            style={{ background: "var(--accent)", transform: "translateY(-3px)" }}
+            style={{ background: "var(--room-fg)", transform: "translateY(-3px)" }}
           />
-          <p className="u-micro m-0" style={{ color: "var(--ink-faint)" }}>
-            <span className="u-year">{milestone.years}</span>
+          <p className="t-micro" style={{ color: "var(--room-muted)" }}>
+            <span style={{ fontVariantNumeric: "tabular-nums" }}>{milestone.years}</span>
             {milestone.confirm ? " · to confirm" : null}
           </p>
-          <p className="u-exhibit-title m-0 mt-3" style={{ fontSize: "1.25rem" }}>
+          <p className="t-caption mt-[12px]">
             {milestone.role}
           </p>
-          <p className="u-label m-0 mt-2" style={{ color: "var(--accent)" }}>
+          <p className="t-micro mt-[8px]" style={{ color: "var(--room-muted)" }}>
             {milestone.place}
           </p>
           <p
-            className="m-0 mt-4 max-w-[22rem]"
-            style={{ color: "var(--ink-muted)", fontSize: "var(--text-label)", lineHeight: 1.65 }}
+            className="t-body mt-[16px] max-w-[34ch]"
+            style={{ opacity: 0.78, fontSize: "var(--text-body-sm)" }}
           >
             {milestone.line}
           </p>

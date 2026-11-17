@@ -33,17 +33,16 @@ export default async function ExhibitPage({
   if (!exhibit) notFound();
 
   return (
-    <div className="pt-24">
-      <div className="mx-auto w-full max-w-[64rem] px-6 sm:px-10">
+    <div data-tone="light" className="min-h-screen pt-[96px]">
+      <div className="mx-auto w-full max-w-[64rem] px-5 sm:px-7">
         <Link
           href="/"
-          className="u-label inline-block px-4 py-2"
-          style={{ color: "var(--ink-muted)", border: "1px solid var(--hairline)" }}
+          className="c-pill"
         >
           ← Back to the museum
         </Link>
       </div>
-      <div className="mt-10">
+      <div className="mt-[var(--spacing-40)]">
         <ExhibitDetail exhibit={exhibit} />
       </div>
     </div>

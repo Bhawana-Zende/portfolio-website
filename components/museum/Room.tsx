@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ROOM_META } from "@/lib/museum";
 import type { Room as RoomId } from "@/content/schema";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { Wireframe } from "@/components/atmosphere/Wireframe";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -16,12 +17,18 @@ if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
  */
 export function Room({
   id,
+  tone,
   children,
   wide = false,
+  wireframe,
 }: {
   id: RoomId;
+  /** Rooms alternate light and dark with hard cuts — never a gradient. */
+  tone: "light" | "dark";
   children: React.ReactNode;
   wide?: boolean;
+  /** Hairline geometry over a dark room. */
+  wireframe?: "chevron" | "diamond" | "corners";
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
@@ -75,41 +82,43 @@ export function Room({
       id={id}
       aria-labelledby={`${id}-title`}
       data-room={id}
-      className="relative scroll-mt-0 px-6 py-[var(--spacing-room)] sm:px-10 lg:px-16"
+      data-tone={tone}
+      className="relative overflow-hidden px-5 py-[var(--spacing-96)] sm:px-7 lg:px-[var(--spacing-40)]"
     >
+      {wireframe ? <Wireframe variant={wireframe} /> : null}
+
       {/* the doorway: a lintel line the visitor passes under */}
       <div
         data-doorway=""
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px"
-        style={{ background: "var(--hairline)" }}
+        style={{ background: "var(--room-rule)" }}
       />
 
       <header
         data-room-heading=""
-        className={`mb-[clamp(3rem,6vw,6rem)] ${wide ? "" : "max-w-[70rem]"}`}
+        /* the heading sits above the wireframe */
+        style={{ position: "relative", zIndex: 1 }}
+        className={`mb-[var(--spacing-60)] ${wide ? "" : "max-w-[70rem]"}`}
       >
         <div className="overflow-hidden">
-          <p className="u-micro m-0" style={{ color: "var(--accent)" }}>
+          <p className="t-micro" style={{ color: "var(--room-muted)" }}>
             {meta.label}
           </p>
         </div>
-        <div className="mt-4 overflow-hidden">
-          <h2 id={`${id}-title`} className="u-room-title m-0">
+        <div className="mt-[16px] overflow-hidden">
+          <h2 id={`${id}-title`} className="t-section">
             {meta.name}
           </h2>
         </div>
-        <div className="mt-6 overflow-hidden">
-          <p
-            className="u-lede m-0 max-w-[30rem]"
-            style={{ color: "var(--ink-muted)" }}
-          >
+        <div className="mt-[20px] overflow-hidden">
+          <p className="t-caption max-w-[34ch]" style={{ opacity: 0.72 }}>
             {meta.note}
           </p>
         </div>
       </header>
 
-      {children}
+      <div className="relative z-[1]">{children}</div>
     </section>
   );
 }
